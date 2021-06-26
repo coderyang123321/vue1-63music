@@ -1,12 +1,23 @@
 <template>
-  <div>
-    <Banner :banner="banner"></Banner>
-    <Personalized
-      :personalized="personalized"
-      :title="'推荐歌单'"
-    ></Personalized>
-    <Personalized :personalized="newAlbum" :title="'最新专辑'"></Personalized>
-    <SongList :newsong="newsong" :title="'最新音乐'"></SongList>
+  <div class="recommend">
+    <!-- iscroll 三层结构 -->
+    <ScrollView>
+      <div>
+        <Banner :banner="banner"></Banner>
+        <Personalized
+          :personalized="personalized"
+          :title="'推荐歌单'"
+          @toDetail="toDetail"
+        ></Personalized>
+        <Personalized
+          :personalized="newAlbum"
+          :title="'最新专辑'"
+          @toDetail="toDetail"
+        ></Personalized>
+        <SongList :newsong="newsong" :title="'最新音乐'"></SongList>
+      </div>
+    </ScrollView>
+    <router-view></router-view>
   </div>
 </template>
 <script>
@@ -19,11 +30,13 @@ import {
 import Banner from "@/components/Banner";
 import Personalized from "@/components/Personalized";
 import SongList from "@/components/SongList";
+import ScrollView from "@/components/ScrollView";
 export default {
   components: {
     Banner,
     Personalized,
     SongList,
+    ScrollView,
   },
   data() {
     return {
@@ -32,6 +45,13 @@ export default {
       newAlbum: [], // 最新专辑
       newsong: [],
     };
+  },
+  methods: {
+    toDetail(id) {
+      this.$router.push({
+        path: `/recommend/detail/${id}`,
+      });
+    },
   },
   created() {
     getBanner({ type: 2 })
@@ -51,8 +71,19 @@ export default {
     });
     getNewSong().then((res) => {
       this.newsong = res.result;
-      console.log(res);
+      // console.log(res);
     });
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.recommend {
+  position: fixed;
+  top: 184px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden; //让滚动的时候超出的部分不显示,就不会盖住header 和 tabber
+}
+</style>

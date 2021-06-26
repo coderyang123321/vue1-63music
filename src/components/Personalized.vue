@@ -5,7 +5,12 @@
       <h3>{{ title }}</h3>
     </div>
     <div class="personalized-list">
-      <div class="list-item" v-for="item in personalized" :key="item.id">
+      <div
+        class="list-item"
+        v-for="item in personalized"
+        :key="item.id"
+        @click="itemClick(item.id)"
+      >
         <!-- <img :src="item.picUrl" alt="" /> -->
         <img v-lazy="item.picUrl" alt="" />
         <p>{{ item.name }}</p>
@@ -23,6 +28,12 @@ export default {
     title: {
       type: String,
       default: "",
+    },
+  },
+  methods: {
+    itemClick(id) {
+      // console.log(id);
+      this.$emit("toDetail", id);
     },
   },
 };

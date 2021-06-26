@@ -11,7 +11,13 @@ const routes = [
   },
   {
     path: '/recommend',
-    component:()=> import("@/views/Recommend")
+    component: () => import("@/views/Recommend"),
+    children: [
+      {
+        path: 'detail/:id',
+        component: () => import("@/views/Detail"),
+      }
+    ]
   },
   {
     path: '/rank',

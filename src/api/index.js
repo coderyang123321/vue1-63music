@@ -10,4 +10,7 @@ export const getPersonalized = (params) => request.get('/personalized', { params
 export const getNewAlbum = (params) => request.get('/album/newest',{params})
 
 // 最新音乐
-export const getNewSong = (params) => request.get('/personalized/newsong',{params})
+export const getNewSong = (params) => request.get('/personalized/newsong', { params })
+
+// 歌单详情
+export const getSongDetail = (params) => request.get('/playlist/detail',{params})
