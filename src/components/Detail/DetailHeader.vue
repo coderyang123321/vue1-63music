@@ -1,13 +1,19 @@
 <template>
   <div class="header" @click="changeTheme">
-    <div class="header-left"></div>
-    <div class="header-title">知渔音乐</div>
+    <div class="header-left" @click.stop="back"></div>
+    <div class="header-title">{{ title }}</div>
     <div class="header-right"></div>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    title: {
+      type: String,
+      default: "",
+    },
+  },
   data() {
     return {
       themeList: ["theme", "theme1", "theme2"],
@@ -24,6 +30,10 @@ export default {
         "data-theme",
         this.themeList[this.currentIndex]
       );
+    },
+    back() {
+      // this.$router.go(-1); 等价于下面
+      window.history.back();
     },
   },
 };
@@ -50,15 +60,17 @@ export default {
     height: 84px;
   }
   .header-left {
-    @include bg_img("~@/assets/images/logo");
+    @include bg_img("~@/assets/images/back");
   }
   .header-right {
-    @include bg_img("~@/assets/images/account");
+    @include bg_img("~@/assets/images/more");
   }
   .header-title {
     color: #fff;
     //设置字体大小不随屏幕变化而变化
     @include font_size($font_medium);
+    @include no-wrap() //不换行
+;
   }
   .theme {
     position: fixed;

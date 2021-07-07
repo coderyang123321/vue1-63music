@@ -10,7 +10,8 @@ export default {
   mounted() {
     this.iscroll = new IScroll(this.$refs.wrapper, {
       mouseWheel: true,
-      scrollbars: true,
+      scrollbars: false,
+      probeType: 3,
       // 解决拖拽卡顿问题
       scrollX: false,
       scrollY: true,
@@ -48,6 +49,14 @@ export default {
      * 3 告诉观察者对象我们需要观察谁，我们需要观察什么内容
      */
     observer.observe(this.$refs.wrapper, config);
+  },
+  methods: {
+    // 提供一个监听滚动距离的方法给外界
+    scrolling(callback) {
+      this.iscroll.on("scroll", function () {
+        callback(this.y);
+      });
+    },
   },
 };
 </script>

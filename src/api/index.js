@@ -13,4 +13,7 @@ export const getNewAlbum = (params) => request.get('/album/newest',{params})
 export const getNewSong = (params) => request.get('/personalized/newsong', { params })
 
 // 歌单详情
-export const getSongDetail = (params) => request.get('/playlist/detail',{params})
+export const getSongDetail = (params) => request.get('/playlist/detail', { params })
+
+// 专辑详情
+export const getAlbumDetail = (params) => request.get('/album',{params})

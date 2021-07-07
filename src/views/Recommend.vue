@@ -1,23 +1,29 @@
 <template>
   <div class="recommend">
     <!-- iscroll 三层结构 -->
-    <ScrollView>
-      <div>
-        <Banner :banner="banner"></Banner>
-        <Personalized
-          :personalized="personalized"
-          :title="'推荐歌单'"
-          @toDetail="toDetail"
-        ></Personalized>
-        <Personalized
-          :personalized="newAlbum"
-          :title="'最新专辑'"
-          @toDetail="toDetail"
-        ></Personalized>
-        <SongList :newsong="newsong" :title="'最新音乐'"></SongList>
-      </div>
-    </ScrollView>
-    <router-view></router-view>
+    <div class="recommend-wrapper">
+      <ScrollView>
+        <div>
+          <Banner :banner="banner"></Banner>
+          <Personalized
+            :personalized="personalized"
+            :title="'推荐歌单'"
+            :type="'personalized'"
+            @toDetail="toDetail"
+          ></Personalized>
+          <Personalized
+            :personalized="newAlbum"
+            :title="'最新专辑'"
+            :type="'album'"
+            @toDetail="toDetail"
+          ></Personalized>
+          <SongList :newsong="newsong" :title="'最新音乐'"></SongList>
+        </div>
+      </ScrollView>
+    </div>
+    <transition>
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 <script>
@@ -27,9 +33,9 @@ import {
   getNewAlbum,
   getNewSong,
 } from "@/api/index.js";
-import Banner from "@/components/Banner";
-import Personalized from "@/components/Personalized";
-import SongList from "@/components/SongList";
+import Banner from "@/components/Recommend/Banner";
+import Personalized from "@/components/Recommend/Personalized";
+import SongList from "@/components/Recommend/SongList";
 import ScrollView from "@/components/ScrollView";
 export default {
   components: {
@@ -47,9 +53,9 @@ export default {
     };
   },
   methods: {
-    toDetail(id) {
+    toDetail(id, type) {
       this.$router.push({
-        path: `/recommend/detail/${id}`,
+        path: `/recommend/detail/${id}/${type}`,
       });
     },
   },
@@ -84,6 +90,29 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  overflow: hidden; //让滚动的时候超出的部分不显示,就不会盖住header 和 tabber
+  .recommend-wrapper {
+    // 这里能解决ios手机上滚动的时候头部不显示的问题//让滚动的时候超出的部分不显示,就不会盖住header 和 tabber
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+}
+.v-enter {
+  transform: translateX(100%);
+}
+.v-enter-active {
+  transition: transform 1s;
+}
+.v-enter-to {
+  transform: translateX(0);
+}
+.v-leave {
+  transform: translateX(0);
+}
+.v-leave-active {
+  transition: transform 1s;
+}
+.v-leave-to {
+  transform: translateX(100%);
 }
 </style>
