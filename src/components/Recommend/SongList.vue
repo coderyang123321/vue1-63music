@@ -9,7 +9,7 @@
         class="list-item"
         v-for="item in newsong"
         :key="item.id"
-        @click="showPlayer"
+        @click="showPlayer(item.id)"
       >
         <!-- <img :src="item.song.album.picUrl" alt="" /> -->
         <img v-lazy="item.song.album.picUrl" alt="" />
@@ -37,12 +37,14 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["setFullScreen", "showMiniPlaying"]),
-    showPlayer() {
+    ...mapActions(["setFullScreen", "showMiniPlaying", "getSongDetail"]),
+    showPlayer(id) {
       //显示播放界面
       this.setFullScreen(true);
       //隐藏迷你界面
       this.showMiniPlaying(false);
+      console.log(id);
+      this.getSongDetail([id]);
     },
   },
 };

@@ -2,14 +2,10 @@
   <div class="mini-player" v-show="this.isShowMiniPlayer">
     <div class="player-warpper">
       <div class="player-left" @click="showPlayer">
-        <img
-          src="https://p1.music.126.net/THc2dGCHBcMLuRlwQjccFg==/109951165210824295.jpg"
-          alt=""
-          ref="cicle"
-        />
+        <img :src="currentSong.picUrl" alt="" ref="cicle" />
         <div class="player-title">
-          <h3>演员</h3>
-          <p>薛之谦</p>
+          <h3>{{ currentSong.name }}</h3>
+          <p>{{ currentSong.singer }}</p>
         </div>
       </div>
       <div class="player-right">
@@ -39,7 +35,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["isShowMiniPlayer", "isPlaying"]),
+    ...mapGetters(["isShowMiniPlayer", "isPlaying", "currentSong"]),
   },
   watch: {
     isPlaying(newVlaue, oldValue) {
@@ -80,14 +76,15 @@ export default {
         border-radius: 50%;
         // 动画名称，动画时长，匀速，无限播放
         animation: circle 5s linear infinite;
+        animation-play-state: paused;
         &.cicleActive {
-          animation-play-state: paused; // 播放状态，暂停动画 ，， 默认时running'开启
+          animation-play-state: running; // 播放状态，暂停动画 ，， 默认时running'开启
         }
       }
       .player-title {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        // align-items: center;
         justify-content: center;
         margin-left: 30px;
         h3 {
@@ -106,9 +103,9 @@ export default {
       .play {
         width: 80px;
         height: 80px;
-        @include bg_img("../../assets/images/pause");
+        @include bg_img("../../assets/images/play");
         &.active {
-          @include bg_img("../../assets/images/play");
+          @include bg_img("../../assets/images/pause");
         }
       }
       .list {

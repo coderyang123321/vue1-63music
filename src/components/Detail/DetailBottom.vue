@@ -1,10 +1,15 @@
 <template>
   <ul class="detail-bottom">
-    <li class="bottom-top">
+    <li class="bottom-top" @click="playAllMusic">
       <div class="detail-icon"></div>
       <div class="title">播放全部</div>
     </li>
-    <li v-for="item in tracks" :key="item.id" class="item" @click="selectMusic">
+    <li
+      v-for="item in tracks"
+      :key="item.id"
+      class="item"
+      @click="selectMusic(item.id)"
+    >
       <h3>{{ item.name }}</h3>
       <p>{{ item.al.name }} - {{ item.ar[0].name }}</p>
     </li>
@@ -20,13 +25,24 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["setFullScreen", "showMiniPlaying"]),
-    selectMusic() {
+    ...mapActions(["setFullScreen", "showMiniPlaying", "getSongDetail"]),
+    selectMusic(id) {
       // this.$store.dispatch("setFullScreen", true);
       //显示默认播放界面
       this.setFullScreen(true);
       //隐藏迷你界面
       this.showMiniPlaying(false);
+      // 发送异步请求，拿到歌曲详情信息
+      this.getSongDetail([id]);
+    },
+    //
+    playAllMusic() {
+      this.setFullScreen(true);
+      this.showMiniPlaying(false);
+      let ids = this.tracks.map((item) => {
+        return item.id;
+      });
+      this.getSongDetail(ids);
     },
   },
 };

@@ -16,4 +16,13 @@ export const getNewSong = (params) => request.get('/personalized/newsong', { par
 export const getSongDetail = (params) => request.get('/playlist/detail', { params })
 
 // 专辑详情
-export const getAlbumDetail = (params) => request.get('/album',{params})
+export const getAlbumDetail = (params) => request.get('/album', { params })
+
+// 歌曲详情
+export const fetchSongDetail = (params) => request.get('/song/detail', { params })
+
+  // 获取歌词
+export const getSongLyric = (params) => request.get('/lyric', { params })
+
+  // 获取音乐url
+  export const getSongUrl = (params) => request.get('/song/url',  {params} )

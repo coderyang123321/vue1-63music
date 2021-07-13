@@ -6,13 +6,13 @@ Vue 会跳过 CSS 的检测。这也可以避免过渡过程中 CSS 的影响。
       <div class="normal-warpper">
         <PlayerHeader></PlayerHeader>
         <PlayerMiddle></PlayerMiddle>
-        <PlayerBottom></PlayerBottom>
+        <PlayerBottom
+          :totalTime="totalTime"
+          :currentTime="currentTime"
+        ></PlayerBottom>
       </div>
       <div class="player-bg">
-        <img
-          src="https://p1.music.126.net/THc2dGCHBcMLuRlwQjccFg==/109951165210824295.jpg"
-          alt=""
-        />
+        <img :src="currentSong.picUrl" alt="" />
       </div>
     </div>
   </transition>
@@ -21,10 +21,22 @@ Vue 会跳过 CSS 的检测。这也可以避免过渡过程中 CSS 的影响。
 import PlayerHeader from "@/components/Player/PlayerHeader";
 import PlayerMiddle from "@/components/Player/PlayerMiddle";
 import PlayerBottom from "@/components/Player/PlayerBottom";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import Velocity from "velocity-animate";
 import "velocity-animate/velocity.ui";
 export default {
+  props: {
+    totalTime: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    currentTime: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+  },
   components: {
     PlayerHeader,
     PlayerMiddle,
@@ -34,6 +46,7 @@ export default {
     return {};
   },
   methods: {
+    ...mapActions(["getCurrentLyric"]),
     // 动画进入时触发的钩子
     enter(el, done) {
       Velocity(el, "transition.shrinkIn", { duration: 500 }, function () {
@@ -51,7 +64,18 @@ export default {
   computed: {
     // mapGetters 辅助函数仅仅是将 store 中的 getter 映射到局部计算属性
     // 数组里是要映射到局部的数据 ， 页面上使用 this.isFullScreen 来访问
-    ...mapGetters(["isFullScreen"]),
+    ...mapGetters(["isFullScreen", "currentSong"]),
+  },
+  watch: {
+    // 当前歌曲变化的时候，获取相应的歌词也变化
+    currentSong(newValue, okdValue) {
+      // console.log(newValue, "---", okdValue);
+      // 如果全部删完了，就不请求获取歌词
+      if (newValue.id === undefined) {
+        return;
+      }
+      this.getCurrentLyric(newValue.id);
+    },
   },
 };
 </script>

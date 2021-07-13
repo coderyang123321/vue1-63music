@@ -2,8 +2,8 @@
   <div class="header">
     <div class="header-left" @click="hiddenNormalPlayer"></div>
     <div class="header-title">
-      <h3>演员</h3>
-      <p>薛之谦</p>
+      <h3>{{ currentSong.name }}</h3>
+      <p>{{ currentSong.singer }}</p>
     </div>
     <div class="header-right"></div>
   </div>
@@ -23,6 +23,9 @@ export default {
       //显示迷你界面
       this.showMiniPlaying(true);
     },
+  },
+  computed: {
+    ...mapGetters(["currentSong"]),
   },
 };
 </script>

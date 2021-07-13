@@ -57,6 +57,11 @@ export default {
         callback(this.y);
       });
     },
+    refresh() {
+      setTimeout(() => {
+        this.iscroll.refresh();
+      }, 100);
+    },
   },
 };
 </script>
