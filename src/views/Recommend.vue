@@ -76,8 +76,26 @@ export default {
       this.newAlbum = res.albums.splice(0, 6); // 删除前面6个
     });
     getNewSong().then((res) => {
-      this.newsong = res.result;
-      // console.log(res);
+      let list = [];
+      res.result.forEach((item) => {
+        if (item.id) {
+          let obj = {};
+          obj.name = item.name;
+          obj.id = item.id;
+          obj.picUrl = item.song.album.picUrl;
+          let singer = "";
+          for (let i = 0; i < item.song["artists"].length; i++) {
+            if (i == 0) {
+              singer = item.song["artists"][i].name;
+            } else {
+              singer += "-" + item.song["artists"][i].name;
+            }
+          }
+          obj.singer = singer;
+          list.push(obj);
+        }
+      });
+      this.newsong = list;
     });
   },
 };

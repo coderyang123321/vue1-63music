@@ -1,8 +1,15 @@
 <template>
   <div class="header" @click="changeTheme">
-    <div class="header-left"></div>
-    <div class="header-title">知渔音乐</div>
-    <div class="header-right" @click.stop="toAccount"></div>
+    <div class="header-left" @click.stop="back"></div>
+    <ul class="header-title">
+      <li :class="{ active: switchNum === 0 }" @click.stop="switchItem(0)">
+        我喜欢的
+      </li>
+      <li :class="{ active: switchNum === 1 }" @click.stop="switchItem(1)">
+        最近试听
+      </li>
+    </ul>
+    <div class="header-right"></div>
   </div>
 </template>
 
@@ -12,6 +19,7 @@ export default {
     return {
       themeList: ["theme", "theme1", "theme2"],
       currentIndex: 0,
+      switchNum: 0,
     };
   },
   methods: {
@@ -25,8 +33,13 @@ export default {
         this.themeList[this.currentIndex]
       );
     },
-    toAccount() {
-      this.$router.push("/account");
+    back() {
+      // this.$router.go(-1); 等价于下面
+      window.history.back();
+    },
+    switchItem(num) {
+      this.switchNum = num;
+      this.$emit("switchNum", num);
     },
   },
 };
@@ -53,15 +66,33 @@ export default {
     height: 84px;
   }
   .header-left {
-    @include bg_img("~@/assets/images/logo");
+    @include bg_img("~@/assets/images/back");
   }
   .header-right {
-    @include bg_img("~@/assets/images/account");
+    @include bg_img("~@/assets/images/more");
   }
   .header-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #fff;
     color: #fff;
-    //设置字体大小不随屏幕变化而变化
+    font-weight: bold;
+    border-radius: 10px;
     @include font_size($font_medium);
+    @include no-wrap(); //不换行
+    height: 60px;
+    li {
+      height: 60px;
+      line-height: 60px;
+      padding: 0 20px;
+      &:nth-of-type(1) {
+        border-right: 1px solid #fff;
+      }
+      &.active {
+        background: rgba(255, 255, 255, 0.3);
+      }
+    }
   }
   .theme {
     position: fixed;

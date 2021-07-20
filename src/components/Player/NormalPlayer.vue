@@ -5,7 +5,7 @@ Vue 会跳过 CSS 的检测。这也可以避免过渡过程中 CSS 的影响。
     <div class="normal-player" v-show="this.isFullScreen">
       <div class="normal-warpper">
         <PlayerHeader></PlayerHeader>
-        <PlayerMiddle></PlayerMiddle>
+        <PlayerMiddle :currentTime="currentTime"></PlayerMiddle>
         <PlayerBottom
           :totalTime="totalTime"
           :currentTime="currentTime"

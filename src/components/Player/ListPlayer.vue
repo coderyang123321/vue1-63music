@@ -31,7 +31,11 @@
                 <p>{{ item.name }}</p>
               </div>
               <div class="item-right">
-                <div class="item-favorite"></div>
+                <div
+                  class="item-favorite"
+                  @click.stop="favorite(item)"
+                  :class="{ active: isFavorite(item) }"
+                ></div>
                 <div class="item-del" @click.stop="del(index)"></div>
               </div>
             </li>
@@ -63,6 +67,7 @@ export default {
       "showListPlaying",
       "setDelSong",
       "setCurrentIndex",
+      "setFavoriteSong",
     ]),
     play() {
       //点击之后把当前状态取反
@@ -98,6 +103,17 @@ export default {
     selectMusic(index) {
       this.setCurrentIndex(index);
     },
+    // 收藏歌曲
+    favorite(item) {
+      this.setFavoriteSong(item);
+    },
+    // 判断是否收藏了，
+    isFavorite(song) {
+      let res = this.favoriteList.find((item) => {
+        return item.id === song.id;
+      });
+      return res !== undefined;
+    },
   },
   computed: {
     ...mapGetters([
@@ -106,6 +122,7 @@ export default {
       "isShowListPlayer",
       "songs",
       "currentIndex",
+      "favoriteList",
     ]),
   },
   watch: {
@@ -235,7 +252,10 @@ export default {
           .item-favorite {
             width: 56px;
             height: 56px;
-            @include bg_img("../../assets/images/small_favorite");
+            @include bg_img("../../assets/images/small_un_favorite");
+            &.active {
+              @include bg_img("../../assets/images/small_favorite");
+            }
           }
           .item-del {
             width: 52px;

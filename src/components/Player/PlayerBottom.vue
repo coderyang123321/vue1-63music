@@ -2,8 +2,8 @@
   <div class="player-bottom">
     <div class="progress">
       <span ref="eleCurrentTime">00:00</span>
-      <div class="progress-bar">
-        <div class="progress-line">
+      <div class="progress-bar" @click="progressBarClick" ref="progressBar">
+        <div class="progress-line" ref="progressLine">
           <div class="progress-dot"></div>
         </div>
       </div>
@@ -14,7 +14,11 @@
       <div class="prev" @click="prev"></div>
       <div class="play" @click="play" ref="play"></div>
       <div class="next" @click="next"></div>
-      <div class="favorite"></div>
+      <div
+        class="favorite"
+        @click="favorite"
+        :class="{ active: isFavorite(currentSong) }"
+      ></div>
     </div>
   </div>
 </template>
@@ -36,7 +40,13 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["setIsPlaying", "setModeType", "setCurrentIndex"]),
+    ...mapActions([
+      "setIsPlaying",
+      "setModeType",
+      "setCurrentIndex",
+      "setCurrentTime",
+      "setFavoriteSong",
+    ]),
     play() {
       //点击之后把当前状态取反
       this.setIsPlaying(!this.isPlaying);
@@ -62,9 +72,43 @@ export default {
     next() {
       this.setCurrentIndex(this.currentIndex + 1);
     },
+    //收藏歌曲
+    favorite() {
+      this.setFavoriteSong(this.currentSong);
+    },
+    // 判断是否收藏了，
+    isFavorite(song) {
+      let res = this.favoriteList.find((item) => {
+        return item.id === song.id;
+      });
+      return res !== undefined;
+    },
+    progressBarClick(e) {
+      // 1 计算进度条的位置
+      // let normalLeft = e.target.offsetLeft;
+      let normalLeft = this.$refs.progressBar.offsetLeft;
+      let eventLeft = e.pageX;
+      let clickLeft = eventLeft - normalLeft;
+      // let progressWidth = e.target.offsetWidth;
+      let progressWidth = this.$refs.progressBar.offsetWidth;
+
+      let value = clickLeft / progressWidth; // 点击的位置在进度条中的宽度
+      this.$refs.progressLine.style.width = value * 100 + "%";
+
+      // 计算当前应该从什么地方开始播放
+      let currentTime = this.totalTime * value;
+      this.setCurrentTime(currentTime);
+      // console.log(currentTime);
+    },
   },
   computed: {
-    ...mapGetters(["isPlaying", "modeType", "currentIndex"]),
+    ...mapGetters([
+      "isPlaying",
+      "modeType",
+      "currentIndex",
+      "currentSong",
+      "favoriteList",
+    ]),
   },
   watch: {
     //监听改变  为真的话，添加active类 假的话去除active类
@@ -96,8 +140,12 @@ export default {
       this.$refs.eleTotalTime.innerHTML = time.minute + ":" + time.second;
     },
     currentTime(newValue, oldValue) {
+      // 1格式化当前播放时间
       let time = formatTime(newValue);
       this.$refs.eleCurrentTime.innerHTML = time.minute + ":" + time.second;
+      // 2. 当前播放时间/ 总时间 得到的比列给前景的宽度，
+      let value = (newValue / this.totalTime) * 100;
+      this.$refs.progressLine.style.width = value + "%";
     },
   },
 };
@@ -125,14 +173,15 @@ export default {
       margin: 0 10px;
       background-color: #fff;
       height: 10px;
-      position: relative;
       .progress-line {
-        width: 50%;
+        position: relative;
+        width: 0;
         height: 100%;
         background: #ccc;
         .progress-dot {
+          // 小圆点相对于前景来定位，好处就是修改前景line的宽度，就可以实现小圆点同步时间移动
           position: absolute;
-          left: 50%;
+          left: 100%;
           top: 50%;
           transform: translate(-50%, -50%);
           width: 16px;
@@ -179,6 +228,9 @@ export default {
     }
     .favorite {
       @include bg_img("../../assets/images/un_favorite");
+      &.active {
+        @include bg_img("../../assets/images/favorite");
+      }
     }
   }
 }

@@ -8,10 +8,14 @@
       <p>{{ getFirstLyric() }}</p>
     </swiper-slide>
     <!-- 歌词slide -->
-    <swiper-slide class="lyric">
-      <ScrollView>
+    <swiper-slide class="lyric" ref="lyric">
+      <ScrollView ref="scrollview">
         <ul>
-          <li v-for="(value, key, index) in currentLyric" :key="index">
+          <li
+            v-for="(value, key) in currentLyric"
+            :key="key"
+            :class="{ active: currentLineNum === key }"
+          >
             {{ value }}
           </li>
         </ul>
@@ -27,6 +31,13 @@ import "swiper/css/swiper.css";
 import ScrollView from "../ScrollView.vue";
 import { mapGetters } from "vuex";
 export default {
+  props: {
+    currentTime: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+  },
   components: {
     SwiperSlide,
     Swiper,
@@ -47,12 +58,25 @@ export default {
         observeParents: true,
         observeSlideChildren: true,
       },
+      currentLineNum: "0",
     };
   },
   methods: {
     getFirstLyric() {
       for (let key in this.currentLyric) {
         return this.currentLyric[key];
+      }
+    },
+    getActiveLineNum(lineNum) {
+      if (lineNum < 0) {
+        return this.currentLineNum;
+      }
+      let result = this.currentLyric[lineNum + ""];
+      if (result === undefined || result === "") {
+        lineNum--;
+        return this.getActiveLineNum(lineNum);
+      } else {
+        return lineNum + "";
       }
     },
   },
@@ -66,6 +90,46 @@ export default {
         this.$refs.play.classList.add("active");
       } else {
         this.$refs.play.classList.remove("active");
+      }
+    },
+    //监听当前播放时间的变化，让相应的歌词高亮 动态绑定active 样式
+    currentTime(newValue, oldValue) {
+      // 1 歌词高亮同步
+      // let lineNum = Math.floor(newValue) + "";
+      // let result = this.currentLyric[lineNum];
+      // if (result !== undefined && result !== "") {
+      //   this.currentLineNum = lineNum;
+      //   // 2.歌词滚动同步
+      //   // 拿到当前高亮歌词的距离顶部的距离
+      //   let currentLyricTop = document.querySelector("li.active").offsetTop;
+      //   let lyricTop = this.$refs.lyric.$el.offsetHeight;
+      //   if (currentLyricTop > lyricTop / 2) {
+      //     this.$refs.scrollview.scrollTo(
+      //       0,
+      //       lyricTop / 2 - currentLyricTop,
+      //       100
+      //     ); // x 轴不用滚动,y轴滚动 负值是向上滚动，正值是向下滚动
+      //   }
+      // }
+
+      // 改造
+      // 1 歌词高亮同步
+      let lineNum = Math.floor(newValue) + "";
+      this.currentLineNum = this.getActiveLineNum(lineNum);
+      // 2.歌词滚动同步
+      //   // 拿到当前高亮歌词的距离顶部的距离
+      let currentLyricTop = document.querySelector("li.active").offsetTop;
+      let lyricTop = this.$refs.lyric.$el.offsetHeight;
+      if (currentLyricTop > lyricTop / 2) {
+        this.$refs.scrollview.scrollTo(0, lyricTop / 2 - currentLyricTop, 100); // x 轴不用滚动,y轴滚动 负值是向上滚动，正值是向下滚动
+      } else {
+        this.$refs.scrollview.scrollTo(0, 0, 100);
+      }
+    },
+    currentLyric(newValue, oldValue) {
+      for (let key in newValue) {
+        this.currentLineNum = key;
+        return;
       }
     },
   },
@@ -114,7 +178,11 @@ export default {
       margin: 10px 0;
       text-align: center;
       &:last-of-type {
-        padding-bottom: 80px;
+        padding-bottom: 50%;
+      }
+      &.active {
+        color: #fff;
+        font-size: 0.35rem;
       }
     }
   }

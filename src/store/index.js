@@ -11,25 +11,5 @@ export default new Vuex.Store({
   mutations: mutations,
   actions: actions,
   getters:getters,
-  // state: {
-  // isFullScreen:false
-    
-  // },
-  // mutations: {
-  //   changeFullScreen(state, flag) {
-  //     state.isFullScreen = flag
-  //   }
-  // },
-  // actions: {
-  //   setFullScreen({ commit }, flag) {
-  //     commit('changeFullScreen',flag)
-  //   }
-  // },
-  // getters: {
-  //   isFullScreen(state) {
-  //     return state.isFullScreen
-  //   }
-  // },
-  // modules: {
-  // }
+
 })

@@ -7,17 +7,17 @@ import {
   SET_SONG_DETAIL,
   SET_SONG_LYRIC,
   SET_DEL_SONG,
-  SET_CURRENT_INDEX
-
+  SET_CURRENT_INDEX,
+  SET_CURRENT_TIME,
+  SET_FAVORITE_SONG,
+  SET_FAVORITE_LIST,
+  SET_HISTORY_SONG,
+  SET_HISTORY_LIST
 }
   from "./mutations-type"
 import { fetchSongDetail, getSongLyric,getSongUrl } from "@/api/index.js"
 import {parseLyric} from "@/utils/parseLyric"
 export default {
-  // setFullScreen({ commit }, flag) {
-  //       commit('changeFullScreen',flag)
-  //     }
-
 
   //显示隐藏播放页面
   setFullScreen({ commit }, flag) {
@@ -49,7 +49,14 @@ export default {
       let obj = {}
       obj.id = value.id
       obj.name = value.name
-      obj.url = res1.data[i].url
+      // obj.url = res1.data[i].url // 不能直接赋值，点击全部播放的时候会出现给歌词不对版的，需要判断
+      for (let j = 0; j < res1.data.length; j++) {
+        let item = res1.data[j]
+        if (value.id === item.id) {
+          obj.url = item.url
+          break
+        }
+      }
       let singer = ''
       value['ar'].forEach((item,index) => {
         if (index === 0) {
@@ -74,7 +81,6 @@ export default {
     commit(SET_SONG_LYRIC,obj)
 
     }
-    // console.log(obj);
   },
   setDelSong({ commit }, index) {
     commit(SET_DEL_SONG,index)
@@ -82,4 +88,21 @@ export default {
   setCurrentIndex({ commit }, index) {
     commit(SET_CURRENT_INDEX,index)
   },
+  setCurrentTime({ commit }, curTime) {
+    commit(SET_CURRENT_TIME,curTime)
+  },
+  setFavoriteSong({ commit }, song) {
+    commit(SET_FAVORITE_SONG,song)
+  },
+  setFavoriteList({ commit }, list) {
+    commit(SET_FAVORITE_LIST,list)
+  },
+  setHistorySong({ commit }, song) {
+    commit(SET_HISTORY_SONG,song)
+  },
+  setHistryList({ commit }, list) {
+    commit(SET_HISTORY_LIST,list)
+  },
+
+  
 }

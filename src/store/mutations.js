@@ -7,7 +7,12 @@ import {
   SET_SONG_DETAIL,
   SET_SONG_LYRIC,
   SET_DEL_SONG,
-  SET_CURRENT_INDEX
+  SET_CURRENT_INDEX,
+  SET_CURRENT_TIME,
+  SET_FAVORITE_SONG,
+  SET_FAVORITE_LIST,
+  SET_HISTORY_SONG,
+  SET_HISTORY_LIST
 } from "./mutations-type"
 export default {
   // changeFullScreen(state, flag) {
@@ -66,5 +71,42 @@ export default {
       index = state.songs.length-1
     }
     state.currentIndex = index
-  }
+  },
+  [SET_CURRENT_TIME](state, curTime) {
+    state.curTime = curTime
+  },
+  // 收藏歌曲
+  [SET_FAVORITE_SONG](state, song) {
+    //判断收藏的歌曲当中是否已经存在
+    let result = state.favoriteList.find(item => {
+      return item.id == song.id
+    })
+    // 如果找到就就返回当前的歌曲
+
+    // 如果没有找到，则返回undefined，然后把该歌曲添加到收藏里，
+    if (result === undefined) {
+      state.favoriteList.push(song)
+    }
+  },
+  [SET_FAVORITE_LIST](state, list) {
+    state.favoriteList = list
+  },
+  //历史播放歌曲
+  [SET_HISTORY_SONG](state, song) {
+    let result = state.historyList.find(item => {
+      // 如果找到就就返回当前的歌曲
+      return item.id == song.id
+    })
+    // 如果没有找到，则返回undefined，然后把该歌曲添加到历史歌曲列表数组里，
+    if (result === undefined) {
+      if (state.historyList.length > 30) {
+        state.historyList.splice(0,1)
+      }
+      state.historyList.push(song)
+    }
+  },
+  // 播放历史
+  [SET_HISTORY_LIST](state, list) {
+    state.historyList = list
+  },
 }

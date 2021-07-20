@@ -8,5 +8,8 @@ export default {
   songs: [],
   currentSong: {},
   currentIndex:0,
-  currentLyric:{}
+  currentLyric: {},
+  curTime: 0,
+  favoriteList: [],//保存收藏的歌曲
+  historyList:[]//历史记录
 }

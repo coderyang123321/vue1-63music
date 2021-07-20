@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
-
 Vue.use(VueRouter)
-
 const routes = [
   {
     path: '/',
@@ -31,6 +28,10 @@ const routes = [
     path: '/search',
     component:()=> import("@/views/Search")
   },
+  {
+    path: '/account',
+    component:()=> import("@/views/Account")
+  }
 ]
 
 const router = new VueRouter({

@@ -24,3 +24,17 @@ export const SET_DEL_SONG = 'SET_DEL_SONG'
 
 //设置选中的歌曲
 export const SET_CURRENT_INDEX = 'SET_CURRENT_INDEX'
+
+//重新设置当前位置的播放时间
+export const SET_CURRENT_TIME = 'SET_CURRENT_TIME'
+
+//收藏歌曲
+export const SET_FAVORITE_SONG = 'SET_FAVORITE_SONG'
+
+//收藏歌曲列表，用来本地存储存储收藏的歌曲
+export const SET_FAVORITE_LIST = 'SET_FAVORITE_LIST'
+
+//播放历史
+export const SET_HISTORY_SONG = 'SET_HISTORY_SONG'
+
+export const SET_HISTORY_LIST = 'SET_HISTORY_LIST'

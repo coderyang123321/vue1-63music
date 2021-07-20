@@ -34,4 +34,14 @@ export default {
   currentIndex(state) {
     return state.currentIndex
   },
+  curTime(state) {
+    return state.curTime
+  },
+  // 获取收藏歌曲
+  favoriteList(state) {
+    return state.favoriteList
+  },
+  historyList(state) {
+    return state.historyList
+  },
 }
