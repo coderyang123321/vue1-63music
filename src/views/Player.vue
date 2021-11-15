@@ -91,7 +91,16 @@ export default {
     },
     currentIndex(newValue, oldValue) {
       //音频加载到能够播放时，触发该事件
-      this.$refs.audio.oncanplay = () => {
+      /**
+       * 在ios系统中不会自动加载歌曲，所有oncanplay不会自动执行
+       * 在pc端和Android端，系统会自动加载歌曲，所有oncanplay会自当执行
+       */
+      /**\
+       * 解决方案：如果监听ios中Audio的歌曲是否已经准备好了，通过ondurationchange事件来监听
+       * ondurationchange事件什么时候执行：当歌曲加载完之后执行，因为只有当歌曲加载完成之后才能获取总时长
+       */
+      this.$refs.audio.ondurationchange = () => {
+        console.log(2);
         //监听上下一首，重新获取歌曲总时长
         this.totalTime = this.$refs.audio.duration;
 
@@ -129,8 +138,9 @@ export default {
     }
   },
   mounted() {
-    this.$refs.audio.oncanplay = () => {
+    this.$refs.audio.ondurationchange = () => {
       // 播放总时长，拿到的是秒
+      console.log(1);
       this.totalTime = this.$refs.audio.duration;
     };
   },

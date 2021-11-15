@@ -15,6 +15,9 @@ Vue.use(VueLazyload, {
   loading: '@/assets/images/loading.png',
   // attempt: 1
 })
+// import VConsole from "vconsole"
+// const vconsole = new VConsole()
+// Vue.use(vconsole)
 new Vue({
   router,
   store,

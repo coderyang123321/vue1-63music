@@ -16,7 +16,7 @@
 <script>
 import ScrollView from "@/components/ScrollView";
 import SongListItem from "@/components/SongListItem";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   props: {
     switchNum: {
@@ -29,21 +29,31 @@ export default {
     SongListItem,
   },
   methods: {
-    ...mapActions(["setFullScreen", "getSongDetail", "showMiniPlaying"]),
+    ...mapActions([
+      "setFullScreen",
+      "getSongDetail",
+      "showMiniPlaying",
+      "setCurrentIndex",
+    ]),
+    ...mapMutations(["SET_SONG_DETAIL"]),
     playAllMusic() {
+      // let ids = [];
+      if (this.switchNum === 0) {
+        // ids = this.favoriteList.map((item) => {
+        //   return item.id;
+        // });
+        // 优化后的代码，因为vuex中已经有我喜欢的和播放历史的歌曲，没必要上面的代码再调接口
+        this.SET_SONG_DETAIL(this.favoriteList);
+      } else {
+        // ids = this.historyList.map((item) => {
+        //   return item.id;
+        // });
+        this.SET_SONG_DETAIL(this.historyList);
+      }
+      // this.getSongDetail(ids);
       this.setFullScreen(true);
       this.showMiniPlaying(false);
-      let ids = [];
-      if (this.switchNum === 0) {
-        ids = this.favoriteList.map((item) => {
-          return item.id;
-        });
-      } else {
-        ids = this.historyList.map((item) => {
-          return item.id;
-        });
-      }
-      this.getSongDetail(ids);
+      this.setCurrentIndex(0);
     },
   },
   computed: {
